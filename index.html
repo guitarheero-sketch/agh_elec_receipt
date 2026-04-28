@@ -15,17 +15,24 @@
       --brand: #0f5fbd;
       --brand-dark: #0b4b94;
       --danger: #c03434;
+      --ok: #127c56;
       --shadow: 0 18px 45px rgba(16, 24, 40, 0.12);
       --radius: 18px;
     }
 
     * { box-sizing: border-box; }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       background: radial-gradient(circle at top left, #f9fbff 0, var(--bg) 38%, #e8edf5 100%);
       color: var(--ink);
+      min-width: 0;
     }
 
     .app {
@@ -76,6 +83,9 @@
       cursor: pointer;
       transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
       font-size: 14px;
+      min-height: 42px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
 
     button:hover { transform: translateY(-1px); }
@@ -170,6 +180,7 @@
       background: white;
       color: var(--ink);
       outline: none;
+      min-height: 42px;
     }
 
     textarea { resize: vertical; min-height: 72px; }
@@ -224,45 +235,18 @@
       box-shadow: inset 0 0 0 1px rgba(255,255,255,.35);
     }
 
-    .receipt-pages {
+    .paper {
       width: 210mm;
+      min-height: 297mm;
       margin: 0 auto;
-    }
-
-    .pdf-page {
-      width: 210mm;
-      height: 297mm;
-      margin: 0 auto 14px;
       background: white;
       color: #111827;
-      padding: 12mm 13mm 9mm;
+      padding: 14mm;
       box-shadow: 0 18px 45px rgba(0,0,0,.22);
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 10.2pt;
-      line-height: 1.22;
+      font-size: 10.5pt;
+      line-height: 1.25;
       position: relative;
-      overflow: hidden;
-      break-after: page;
-      page-break-after: always;
-    }
-
-    .pdf-page:last-child {
-      margin-bottom: 0;
-      break-after: auto;
-      page-break-after: auto;
-    }
-
-    .page-inner {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .page-main {
-      flex: 1 1 auto;
-      min-height: 0;
-      overflow: hidden;
     }
 
     .doc-head {
@@ -271,12 +255,12 @@
       gap: 12mm;
       align-items: start;
       border-bottom: 2px solid #111827;
-      padding-bottom: 6mm;
-      margin-bottom: 6mm;
+      padding-bottom: 8mm;
+      margin-bottom: 7mm;
     }
 
     .company-name {
-      font-size: 18.5pt;
+      font-size: 19pt;
       font-weight: 900;
       letter-spacing: -0.03em;
       margin-bottom: 2mm;
@@ -284,57 +268,36 @@
     }
 
     .company-meta {
-      font-size: 9.3pt;
+      font-size: 9.6pt;
       color: #293241;
-      line-height: 1.34;
+      line-height: 1.38;
     }
 
-    .doc-title-box { text-align: right; }
+    .doc-title-box {
+      text-align: right;
+    }
 
     .doc-title {
       display: inline-block;
-      font-size: 21pt;
+      font-size: 22pt;
       font-weight: 900;
       letter-spacing: 0.04em;
-      padding: 2mm 0 1.5mm;
+      padding: 3mm 0 2mm;
       text-transform: uppercase;
     }
 
     .doc-meta {
-      margin-top: 2.5mm;
+      margin-top: 3mm;
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: 1.7mm 4mm;
-      font-size: 9.3pt;
+      gap: 2mm 4mm;
+      font-size: 9.6pt;
       text-align: left;
       justify-content: end;
     }
 
-    .mini-head {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8mm;
-      align-items: end;
-      border-bottom: 2px solid #111827;
-      padding-bottom: 4mm;
-      margin-bottom: 5mm;
-    }
-
-    .mini-title {
-      font-size: 15pt;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: -0.02em;
-    }
-
-    .mini-meta {
-      text-align: right;
-      font-size: 9pt;
-      color: #4b5563;
-      line-height: 1.35;
-    }
-
     .doc-meta .label,
+    .bill-grid .label,
     .total-table .label {
       color: #4b5563;
       font-weight: 700;
@@ -343,30 +306,30 @@
     .bill-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 7mm;
-      margin-bottom: 6mm;
+      gap: 8mm;
+      margin-bottom: 8mm;
     }
 
     .bill-card {
       border: 1px solid #cfd6df;
-      padding: 3.8mm;
-      min-height: 25mm;
+      padding: 4.2mm;
+      min-height: 29mm;
     }
 
     .bill-card h3 {
-      margin: 0 0 2.5mm;
-      font-size: 9pt;
+      margin: 0 0 3mm;
+      font-size: 9.5pt;
       text-transform: uppercase;
       letter-spacing: .06em;
       color: #4b5563;
       border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 1.8mm;
+      padding-bottom: 2mm;
     }
 
     .bill-main {
       font-weight: 800;
-      font-size: 10.5pt;
-      margin-bottom: 1.3mm;
+      font-size: 11pt;
+      margin-bottom: 1.5mm;
       text-transform: uppercase;
     }
 
@@ -379,27 +342,26 @@
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
-      margin: 0;
+      margin-bottom: 7mm;
     }
 
     .items-table th,
     .items-table td {
       border: 1px solid #9ca3af;
-      padding: 2.05mm 2mm;
+      padding: 2.4mm 2.2mm;
       vertical-align: top;
       word-wrap: break-word;
-      overflow-wrap: anywhere;
     }
 
     .items-table th {
       background: #f1f5f9;
       text-align: center;
-      font-size: 8.1pt;
+      font-size: 8.6pt;
       text-transform: uppercase;
-      letter-spacing: .02em;
+      letter-spacing: .03em;
     }
 
-    .items-table .no { width: 9mm; text-align: center; }
+    .items-table .no { width: 10mm; text-align: center; }
     .items-table .desc { width: auto; }
     .items-table .qty { width: 20mm; text-align: center; }
     .items-table .unit { width: 25mm; text-align: right; }
@@ -407,33 +369,23 @@
 
     .money { text-align: right; white-space: nowrap; }
 
-    .final-block {
-      flex: 0 0 auto;
-      margin-top: 5mm;
-      padding-top: 0;
-      break-inside: avoid;
-      page-break-inside: avoid;
-    }
-
     .bottom-area {
       display: grid;
       grid-template-columns: 1fr 63mm;
-      gap: 7mm;
+      gap: 8mm;
       align-items: start;
-      break-inside: avoid;
-      page-break-inside: avoid;
     }
 
     .notes-box {
       border: 1px solid #cfd6df;
-      min-height: 22mm;
-      padding: 3.5mm;
-      font-size: 8.8pt;
+      min-height: 26mm;
+      padding: 4mm;
+      font-size: 9.2pt;
     }
 
     .notes-box h3 {
-      margin: 0 0 2mm;
-      font-size: 8.6pt;
+      margin: 0 0 2.5mm;
+      font-size: 9pt;
       text-transform: uppercase;
       color: #4b5563;
       letter-spacing: .05em;
@@ -442,16 +394,16 @@
     .total-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 9.4pt;
+      font-size: 10pt;
     }
 
     .total-table td {
       border: 1px solid #9ca3af;
-      padding: 2.3mm;
+      padding: 2.6mm;
     }
 
     .total-table .grand td {
-      font-size: 12.2pt;
+      font-size: 13pt;
       font-weight: 900;
       background: #f8fafc;
     }
@@ -460,23 +412,18 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12mm;
-      margin-top: 10mm;
+      margin-top: 12mm;
       align-items: end;
-      break-inside: avoid;
-      page-break-inside: avoid;
     }
 
     .sign-box {
-      min-height: 32mm;
+      min-height: 36mm;
       position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
     }
 
     .stamp-img {
-      max-width: 78mm;
-      max-height: 27mm;
+      max-width: 82mm;
+      max-height: 31mm;
       object-fit: contain;
       display: block;
       margin: 0 auto 2mm;
@@ -486,85 +433,30 @@
       border-top: 1px solid #111827;
       padding-top: 2mm;
       text-align: center;
-      font-size: 8.8pt;
+      font-size: 9pt;
       color: #374151;
     }
 
-    .continued-note {
-      flex: 0 0 auto;
-      margin-top: 4mm;
-      padding-top: 0;
-      font-size: 8.6pt;
-      color: #6b7280;
-      text-align: right;
-    }
-
     .footer-note {
-      margin-top: 3mm;
-      font-size: 7.8pt;
+      position: absolute;
+      left: 14mm;
+      right: 14mm;
+      bottom: 9mm;
+      font-size: 8pt;
       color: #6b7280;
       display: flex;
       justify-content: space-between;
       gap: 10px;
       border-top: 1px solid #e5e7eb;
       padding-top: 2mm;
-      flex-shrink: 0;
     }
-
-    .receipt-pages.compact .pdf-page {
-      padding: 10mm 11mm 8mm;
-      font-size: 9.2pt;
-      line-height: 1.16;
-    }
-
-    .receipt-pages.compact .company-name { font-size: 16.4pt; margin-bottom: 1mm; }
-    .receipt-pages.compact .company-meta { font-size: 8.4pt; line-height: 1.22; }
-    .receipt-pages.compact .doc-title { font-size: 18pt; padding: 1mm 0; }
-    .receipt-pages.compact .doc-meta { font-size: 8.3pt; gap: 1.2mm 3mm; }
-    .receipt-pages.compact .doc-head { padding-bottom: 4mm; margin-bottom: 4mm; }
-    .receipt-pages.compact .bill-grid { gap: 5mm; margin-bottom: 4mm; }
-    .receipt-pages.compact .bill-card { min-height: 20mm; padding: 3mm; }
-    .receipt-pages.compact .bill-card h3 { font-size: 8pt; margin-bottom: 1.6mm; padding-bottom: 1.4mm; }
-    .receipt-pages.compact .bill-main { font-size: 9.4pt; }
-    .receipt-pages.compact .items-table th { font-size: 7.2pt; }
-    .receipt-pages.compact .items-table th,
-    .receipt-pages.compact .items-table td { padding: 1.35mm 1.5mm; }
-    .receipt-pages.compact .final-block { margin-top: 3.5mm; padding-top: 0; }
-    .receipt-pages.compact .notes-box { min-height: 18mm; padding: 2.7mm; font-size: 8pt; }
-    .receipt-pages.compact .total-table { font-size: 8.5pt; }
-    .receipt-pages.compact .total-table td { padding: 1.8mm; }
-    .receipt-pages.compact .total-table .grand td { font-size: 10.5pt; }
-    .receipt-pages.compact .sign-area { margin-top: 6mm; }
-    .receipt-pages.compact .sign-box { min-height: 25mm; }
-    .receipt-pages.compact .stamp-img { max-width: 68mm; max-height: 22mm; }
-
-    .receipt-pages.super-compact .pdf-page {
-      padding: 8mm 10mm 7mm;
-      font-size: 8.4pt;
-      line-height: 1.1;
-    }
-
-    .receipt-pages.super-compact .company-name { font-size: 14.5pt; }
-    .receipt-pages.super-compact .company-meta { font-size: 7.8pt; line-height: 1.15; }
-    .receipt-pages.super-compact .doc-title { font-size: 16pt; }
-    .receipt-pages.super-compact .doc-meta { font-size: 7.8pt; }
-    .receipt-pages.super-compact .doc-head { padding-bottom: 3mm; margin-bottom: 3mm; }
-    .receipt-pages.super-compact .bill-grid { margin-bottom: 3mm; }
-    .receipt-pages.super-compact .bill-card { min-height: 17mm; padding: 2.4mm; }
-    .receipt-pages.super-compact .items-table th,
-    .receipt-pages.super-compact .items-table td { padding: 1mm 1.2mm; }
-    .receipt-pages.super-compact .notes-box { min-height: 15mm; padding: 2mm; }
-    .receipt-pages.super-compact .sign-area { margin-top: 4mm; }
-    .receipt-pages.super-compact .sign-box { min-height: 21mm; }
-    .receipt-pages.super-compact .stamp-img { max-width: 60mm; max-height: 19mm; }
 
     .hidden { display: none !important; }
 
-    @page { size: A4; margin: 0; }
-
-    body.generating-pdf .preview-wrap { padding: 0; background: white; }
-    body.generating-pdf .pdf-page { margin: 0; box-shadow: none; }
-    body.generating-pdf .panel { box-shadow: none; }
+    @page {
+      size: A4;
+      margin: 0;
+    }
 
     @media print {
       body { background: white; }
@@ -572,9 +464,8 @@
       .hero, .form-panel { display: none !important; }
       .layout { display: block; }
       .panel { box-shadow: none; border: 0; padding: 0; }
-      .preview-wrap { padding: 0; background: white; border-radius: 0; overflow: visible; }
-      .receipt-pages { width: 210mm; }
-      .pdf-page { box-shadow: none; margin: 0; }
+      .preview-wrap { padding: 0; background: white; border-radius: 0; overflow: visible; height: auto !important; }
+      .paper { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; transform: none !important; }
     }
 
     @media (max-width: 1050px) {
@@ -584,15 +475,105 @@
     }
 
     @media (max-width: 720px) {
-      .app { padding: 10px; }
-      .hero { align-items: stretch; flex-direction: column; }
-      .hero-actions { justify-content: stretch; }
-      .hero-actions button { flex: 1; }
-      .grid-2, .grid-3 { grid-template-columns: 1fr; }
-      .section { padding: 12px; }
-      .receipt-pages { width: 210mm; }
-      .preview-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      body { background: var(--bg); }
+      .app { padding: 8px; }
+      .hero {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 10px;
+        padding: 14px;
+        border-radius: 16px;
+      }
+      .hero h1 { font-size: 22px; line-height: 1.08; }
+      .hero p { font-size: 13px; }
+      .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        justify-content: stretch;
+      }
+      .hero-actions button {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 12px;
+      }
+      .hero-actions #pdfBtn { grid-column: 1 / -1; }
+      .layout { gap: 10px; }
+      .panel {
+        padding: 10px;
+        border-radius: 16px;
+        box-shadow: 0 10px 28px rgba(16, 24, 40, 0.10);
+      }
+      .form-panel {
+        position: static;
+        max-height: none;
+        overflow: visible;
+      }
+      .section {
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 14px;
+      }
+      .section h2 {
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+        gap: 9px;
+      }
+      label { font-size: 12px; }
+      input,
+      textarea,
+      select {
+        min-height: 44px;
+        padding: 11px 12px;
+        border-radius: 12px;
+        font-size: 16px;
+      }
+      textarea { min-height: 86px; }
+      .item-editor {
+        padding: 10px;
+        margin-bottom: 9px;
+        border-radius: 14px;
+      }
+      .item-editor-head {
+        align-items: flex-start;
+        margin-bottom: 8px;
+      }
+      .item-editor-head span { padding-top: 6px; }
+      .btn-danger,
+      .btn-small {
+        min-height: 38px;
+        padding: 8px 10px;
+      }
+      .summary-box {
+        font-size: 13px;
+        border-radius: 12px;
+      }
+      .summary-box strong { font-size: 16px; }
+      .preview-wrap {
+        padding: 8px;
+        overflow: hidden;
+        border-radius: 16px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .paper {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0;
+        transform: scale(var(--paper-scale, 1));
+        transform-origin: top left;
+      }
       .item-editor .grid-3 { gap: 8px; }
+    }
+
+    @media (max-width: 420px) {
+      .hero-actions { grid-template-columns: 1fr; }
+      .hero-actions #pdfBtn { grid-column: auto; }
+      .company-name { font-size: 17pt; }
     }
   </style>
 </head>
@@ -615,16 +596,34 @@
         <div class="section">
           <h2>Maklumat Syarikat</h2>
           <div class="grid-2">
-            <div><label>Nama Syarikat</label><input id="companyName" value="AGH ELEC TRADING" /></div>
-            <div><label>No. Pendaftaran</label><input id="companyReg" value="LA0052469-K" /></div>
+            <div>
+              <label>Nama Syarikat</label>
+              <input id="companyName" value="AGH ELEC TRADING" />
+            </div>
+            <div>
+              <label>No. Pendaftaran</label>
+              <input id="companyReg" value="LA0052469-K" />
+            </div>
           </div>
-          <div style="margin-top:10px;"><label>Alamat Syarikat</label><textarea id="companyAddress">NO A21, TINGKAT 1, JALAN BAHAGIA 10,
-28000 TEMERLOH, PAHANG</textarea></div>
+          <div style="margin-top:10px;">
+            <label>Alamat Syarikat</label>
+            <textarea id="companyAddress">NO A21, TINGKAT 1, JALAN BAHAGIA 10,
+28000 TEMERLOH, PAHANG</textarea>
+          </div>
           <div class="grid-2" style="margin-top:10px;">
-            <div><label>No. Telefon</label><input id="companyPhone" value="0133157598" /></div>
-            <div><label>Bank</label><input id="bankName" value="BANK MUAMALAT" /></div>
+            <div>
+              <label>No. Telefon</label>
+              <input id="companyPhone" value="0133157598" />
+            </div>
+            <div>
+              <label>Bank</label>
+              <input id="bankName" value="BANK MUAMALAT" />
+            </div>
           </div>
-          <div style="margin-top:10px;"><label>No. Akaun Bank</label><input id="bankAccount" value="06040001443713" /></div>
+          <div style="margin-top:10px;">
+            <label>No. Akaun Bank</label>
+            <input id="bankAccount" value="06040001443713" />
+          </div>
         </div>
 
         <div class="section">
@@ -638,19 +637,37 @@
                 <option value="RESIT / INVOIS">RESIT / INVOIS</option>
               </select>
             </div>
-            <div><label>Tarikh</label><input id="docDate" type="date" value="2026-04-24" /></div>
+            <div>
+              <label>Tarikh</label>
+              <input id="docDate" type="date" value="2026-04-24" />
+            </div>
           </div>
           <div class="grid-2" style="margin-top:10px;">
-            <div><label>No. Resit / Rujukan <span style="font-weight:400;">(boleh kosong)</span></label><input id="docNo" placeholder="Contoh: R-001" /></div>
-            <div><label>Status Bayaran <span style="font-weight:400;">(boleh kosong)</span></label><input id="paymentStatus" placeholder="" /></div>
+            <div>
+              <label>No. Resit / Rujukan <span style="font-weight:400;">(boleh kosong)</span></label>
+              <input id="docNo" placeholder="Contoh: R-001" />
+            </div>
+            <div>
+              <label>Status Bayaran <span style="font-weight:400;">(boleh kosong)</span></label>
+              <input id="paymentStatus" placeholder="" />
+            </div>
           </div>
         </div>
 
         <div class="section">
           <h2>Penerima & Tapak Kerja</h2>
-          <div><label>Diterima Daripada / Kepada</label><input id="recipientName" value="PERNIAGAAN PAKSI DANA" /></div>
-          <div style="margin-top:10px;"><label>Alamat / Maklumat Penerima <span style="font-weight:400;">(boleh kosong)</span></label><textarea id="recipientAddress" placeholder="Alamat penerima jika perlu"></textarea></div>
-          <div style="margin-top:10px;"><label>Tapak Kerja</label><textarea id="siteAddress">TAMAN LANCHANG PERMAI</textarea></div>
+          <div>
+            <label>Diterima Daripada / Kepada</label>
+            <input id="recipientName" value="PERNIAGAAN PAKSI DANA" />
+          </div>
+          <div style="margin-top:10px;">
+            <label>Alamat / Maklumat Penerima <span style="font-weight:400;">(boleh kosong)</span></label>
+            <textarea id="recipientAddress" placeholder="Alamat penerima jika perlu"></textarea>
+          </div>
+          <div style="margin-top:10px;">
+            <label>Tapak Kerja</label>
+            <textarea id="siteAddress">TAMAN LANCHANG PERMAI</textarea>
+          </div>
         </div>
 
         <div class="section">
@@ -661,21 +678,22 @@
 
         <div class="section">
           <h2>Nota & Paparan</h2>
-          <div><label>Nota</label><textarea id="notes">Barang yang dijual / kerja yang telah dibuat tidak boleh dikembalikan kecuali dinyatakan sebaliknya.</textarea></div>
+          <div>
+            <label>Nota</label>
+            <textarea id="notes">Barang yang dijual / kerja yang telah dibuat tidak boleh dikembalikan kecuali dinyatakan sebaliknya.</textarea>
+          </div>
           <div class="grid-2" style="margin-top:10px;">
-            <div><label>Diskaun (RM)</label><input id="discount" type="number" min="0" step="0.01" value="0" /></div>
+            <div>
+              <label>Diskaun (RM)</label>
+              <input id="discount" type="number" min="0" step="0.01" value="0" />
+            </div>
             <div>
               <label>Tunjuk Cop Syarikat</label>
-              <select id="showStamp"><option value="yes">Ya</option><option value="no">Tidak</option></select>
+              <select id="showStamp">
+                <option value="yes">Ya</option>
+                <option value="no">Tidak</option>
+              </select>
             </div>
-          </div>
-          <div style="margin-top:10px;">
-            <label>Susun Atur PDF</label>
-            <select id="fitMode">
-              <option value="auto">Auto padatkan supaya muat 1 muka surat jika boleh</option>
-              <option value="normal">Normal, guna muka surat tambahan jika perlu</option>
-              <option value="compact">Sentiasa guna layout padat</option>
-            </select>
           </div>
           <div class="summary-box" style="margin-top:12px;">
             <span>Subtotal</span><span id="uiSubtotal">RM0.00</span>
@@ -688,7 +706,90 @@
 
       <section class="panel">
         <div class="preview-wrap">
-          <div class="receipt-pages" id="receiptPages"></div>
+          <article class="paper" id="receiptPaper">
+            <div class="doc-head">
+              <div>
+                <div class="company-name" id="pCompanyName">AGH ELEC TRADING</div>
+                <div class="company-meta">
+                  <div id="pCompanyReg">No. Pendaftaran: LA0052469-K</div>
+                  <div id="pCompanyAddress">NO A21, TINGKAT 1, JALAN BAHAGIA 10,<br>28000 TEMERLOH, PAHANG</div>
+                  <div id="pCompanyPhone">Tel: 0133157598</div>
+                  <div id="pBank">Bank: BANK MUAMALAT &nbsp; | &nbsp; No. Akaun: 06040001443713</div>
+                </div>
+              </div>
+              <div class="doc-title-box">
+                <div class="doc-title" id="pDocTitle">RESIT</div>
+                <div class="doc-meta">
+                  <div class="label">Tarikh</div><div id="pDocDate">24/04/2026</div>
+                  <div class="label optional-docno">No. Rujukan</div><div id="pDocNo" class="optional-docno"></div>
+                  <div class="label optional-status">Status Bayaran</div><div id="pPaymentStatus" class="optional-status"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bill-grid">
+              <div class="bill-card">
+                <h3>Penerima</h3>
+                <div class="bill-main" id="pRecipientName">PERNIAGAAN PAKSI DANA</div>
+                <div class="bill-lines" id="pRecipientAddress"></div>
+              </div>
+              <div class="bill-card">
+                <h3>Tapak Kerja</h3>
+                <div class="bill-lines" id="pSiteAddress">TAMAN LANCHANG PERMAI</div>
+              </div>
+            </div>
+
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th class="no">Bil.</th>
+                  <th class="desc">Butiran Kerja / Barang</th>
+                  <th class="qty">Kuantiti</th>
+                  <th class="unit">Harga Unit (RM)</th>
+                  <th class="amount">Jumlah (RM)</th>
+                </tr>
+              </thead>
+              <tbody id="pItemsBody"></tbody>
+            </table>
+
+            <div class="bottom-area">
+              <div class="notes-box">
+                <h3>Nota</h3>
+                <div id="pNotes"></div>
+              </div>
+              <table class="total-table">
+                <tbody>
+                  <tr>
+                    <td class="label">Subtotal</td>
+                    <td class="money" id="pSubtotal">RM0.00</td>
+                  </tr>
+                  <tr id="discountRow">
+                    <td class="label">Diskaun</td>
+                    <td class="money" id="pDiscount">RM0.00</td>
+                  </tr>
+                  <tr class="grand">
+                    <td>JUMLAH</td>
+                    <td class="money" id="pGrandTotal">RM0.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="sign-area">
+              <div class="sign-box">
+                <div class="sign-line">Diterima Oleh</div>
+              </div>
+              <div class="sign-box">
+                <img src="stamp.png" alt="Cop Syarikat" class="stamp-img" id="pStamp" onerror="this.style.display='none'" />
+                <div class="sign-line">Tandatangan & Cop Syarikat</div>
+              </div>
+            </div>
+
+            <div class="footer-note">
+              <span>Dokumen ini dijana secara digital.</span>
+              <span id="pFooterDate">Dicetak pada: -</span>
+            </div>
+          </article>
         </div>
       </section>
     </main>
@@ -708,14 +809,34 @@
     ];
 
     let items = [...DEFAULT_ITEMS];
-    let isRendering = false;
 
     const $ = (id) => document.getElementById(id);
     const money = (num) => 'RM' + Number(num || 0).toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    const moneyPlain = (num) => Number(num || 0).toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    const cleanNumber = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
-    const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[c]));
-    const textToHtml = (value) => escapeHtml(String(value || '').trim()).replace(/\n/g, '<br>');
+    const textToHtml = (value) => String(value || '').trim().replace(/\n/g, '<br>');
+
+    function resizePreviewForScreen() {
+      const paper = $('receiptPaper');
+      if (!paper || !paper.parentElement) return;
+
+      const wrap = paper.parentElement;
+      if (window.matchMedia('(max-width: 720px)').matches) {
+        paper.style.setProperty('--paper-scale', '1');
+        const wrapStyle = window.getComputedStyle(wrap);
+        const horizontalPadding = parseFloat(wrapStyle.paddingLeft) + parseFloat(wrapStyle.paddingRight);
+        const verticalPadding = parseFloat(wrapStyle.paddingTop) + parseFloat(wrapStyle.paddingBottom);
+        const availableWidth = wrap.clientWidth - horizontalPadding;
+        const scale = Math.min(1, availableWidth / paper.offsetWidth);
+        paper.style.setProperty('--paper-scale', scale.toFixed(4));
+        wrap.style.height = `${Math.ceil(paper.offsetHeight * scale + verticalPadding)}px`;
+      } else {
+        paper.style.removeProperty('--paper-scale');
+        wrap.style.height = '';
+      }
+    }
+
+    function queueResizePreview() {
+      window.requestAnimationFrame(resizePreviewForScreen);
+    }
 
     function formatDate(dateValue) {
       if (!dateValue) return '';
@@ -725,298 +846,13 @@
     }
 
     function todayText() {
-      return new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const now = new Date();
+      return now.toLocaleDateString('ms-MY', { day: '2-digit', month: '2-digit', year: 'numeric' });
     }
 
-    function getData() {
-      const subtotal = items.reduce((sum, item) => sum + cleanNumber(item.qty) * cleanNumber(item.unit), 0);
-      const discount = cleanNumber($('discount').value);
-      const grand = Math.max(0, subtotal - discount);
-      return {
-        companyName: $('companyName').value || '-',
-        companyReg: $('companyReg').value,
-        companyAddress: $('companyAddress').value,
-        companyPhone: $('companyPhone').value,
-        bankName: $('bankName').value,
-        bankAccount: $('bankAccount').value,
-        docTitle: $('docTitle').value || 'RESIT',
-        docDate: $('docDate').value,
-        docNo: $('docNo').value,
-        paymentStatus: $('paymentStatus').value,
-        recipientName: $('recipientName').value || '-',
-        recipientAddress: $('recipientAddress').value,
-        siteAddress: $('siteAddress').value,
-        notes: $('notes').value,
-        discount,
-        subtotal,
-        grand,
-        showStamp: $('showStamp').value === 'yes',
-        fitMode: $('fitMode').value
-      };
-    }
-
-    function fullHeaderHtml(data) {
-      const bankParts = [];
-      if (data.bankName) bankParts.push(`Bank: ${escapeHtml(data.bankName)}`);
-      if (data.bankAccount) bankParts.push(`No. Akaun: ${escapeHtml(data.bankAccount)}`);
-      return `
-        <div class="doc-head">
-          <div>
-            <div class="company-name">${escapeHtml(data.companyName)}</div>
-            <div class="company-meta">
-              ${data.companyReg ? `<div>No. Pendaftaran: ${escapeHtml(data.companyReg)}</div>` : ''}
-              ${data.companyAddress ? `<div>${textToHtml(data.companyAddress)}</div>` : ''}
-              ${data.companyPhone ? `<div>Tel: ${escapeHtml(data.companyPhone)}</div>` : ''}
-              ${bankParts.length ? `<div>${bankParts.join(' &nbsp; | &nbsp; ')}</div>` : ''}
-            </div>
-          </div>
-          <div class="doc-title-box">
-            <div class="doc-title">${escapeHtml(data.docTitle)}</div>
-            <div class="doc-meta">
-              <div class="label">Tarikh</div><div>${formatDate(data.docDate)}</div>
-              ${data.docNo ? `<div class="label">No. Rujukan</div><div>${escapeHtml(data.docNo)}</div>` : ''}
-              ${data.paymentStatus ? `<div class="label">Status Bayaran</div><div>${escapeHtml(data.paymentStatus)}</div>` : ''}
-            </div>
-          </div>
-        </div>
-        <div class="bill-grid">
-          <div class="bill-card">
-            <h3>Penerima</h3>
-            <div class="bill-main">${escapeHtml(data.recipientName)}</div>
-            <div class="bill-lines">${textToHtml(data.recipientAddress)}</div>
-          </div>
-          <div class="bill-card">
-            <h3>Tapak Kerja</h3>
-            <div class="bill-lines">${textToHtml(data.siteAddress)}</div>
-          </div>
-        </div>
-      `;
-    }
-
-    function miniHeaderHtml(data) {
-      return `
-        <div class="mini-head">
-          <div>
-            <div class="mini-title">${escapeHtml(data.companyName)}</div>
-            <div style="font-size:8.8pt;color:#4b5563;">${escapeHtml(data.docTitle)} - Sambungan</div>
-          </div>
-          <div class="mini-meta">
-            <div>${escapeHtml(data.recipientName)}</div>
-            <div>Tarikh: ${formatDate(data.docDate)}</div>
-          </div>
-        </div>
-      `;
-    }
-
-    function tableHtml(rows, startIndex) {
-      const body = rows.map((item, idx) => {
-        const qty = cleanNumber(item.qty);
-        const unit = cleanNumber(item.unit);
-        const amount = qty * unit;
-        const qtyText = qty === 1 && String(item.desc || '').toLowerCase().includes('lump') ? 'Lump Sum' : qty.toLocaleString('ms-MY');
-        return `
-          <tr>
-            <td class="no">${startIndex + idx + 1}</td>
-            <td class="desc">${textToHtml(item.desc)}</td>
-            <td class="qty">${qtyText}</td>
-            <td class="unit money">${moneyPlain(unit)}</td>
-            <td class="amount money">${moneyPlain(amount)}</td>
-          </tr>
-        `;
-      }).join('');
-
-      return `
-        <table class="items-table">
-          <thead>
-            <tr>
-              <th class="no">Bil.</th>
-              <th class="desc">Butiran Kerja / Barang</th>
-              <th class="qty">Kuantiti</th>
-              <th class="unit">Harga Unit (RM)</th>
-              <th class="amount">Jumlah (RM)</th>
-            </tr>
-          </thead>
-          <tbody>${body}</tbody>
-        </table>
-      `;
-    }
-
-    function finalBlockHtml(data) {
-      return `
-        <div class="final-block">
-          <div class="bottom-area">
-            <div class="notes-box">
-              <h3>Nota</h3>
-              <div>${textToHtml(data.notes)}</div>
-            </div>
-            <table class="total-table">
-              <tbody>
-                <tr><td class="label">Subtotal</td><td class="money">${money(data.subtotal)}</td></tr>
-                ${data.discount > 0 ? `<tr><td class="label">Diskaun</td><td class="money">${money(data.discount)}</td></tr>` : ''}
-                <tr class="grand"><td>JUMLAH</td><td class="money">${money(data.grand)}</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="sign-area">
-            <div class="sign-box"><div class="sign-line">Diterima Oleh</div></div>
-            <div class="sign-box">
-              ${data.showStamp ? `<img src="stamp.png" alt="Cop Syarikat" class="stamp-img" onerror="this.style.display='none'" />` : ''}
-              <div class="sign-line">Tandatangan & Cop Syarikat</div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function footerHtml(pageNo = 1, totalPages = 1) {
-      return `
-        <div class="footer-note">
-          <span>Dokumen ini dijana secara digital.</span>
-          <span>Dicetak pada: ${todayText()} &nbsp; | &nbsp; Muka surat ${pageNo} / ${totalPages}</span>
-        </div>
-      `;
-    }
-
-    function createPage(data, pageIndex, rows, startIndex, isFinal) {
-      const page = document.createElement('article');
-      page.className = 'pdf-page';
-      page.dataset.pageIndex = String(pageIndex);
-      page.innerHTML = `
-        <div class="page-inner">
-          <div class="page-main">
-            ${pageIndex === 0 ? fullHeaderHtml(data) : miniHeaderHtml(data)}
-            ${tableHtml(rows, startIndex)}
-          </div>
-          ${isFinal ? finalBlockHtml(data) : `<div class="continued-note">Bersambung ke muka surat seterusnya...</div>`}
-          ${footerHtml()}
-        </div>
-      `;
-      return page;
-    }
-
-    function isOverflow(page) {
-      const inner = page.querySelector('.page-inner');
-      const main = page.querySelector('.page-main');
-      if (!inner || !main) return false;
-
-      const innerOverflow = inner.scrollHeight > inner.clientHeight + 2;
-      const mainOverflow = main.scrollHeight > main.clientHeight + 2;
-
-      const mainRect = main.getBoundingClientRect();
-      const contentNodes = [...main.querySelectorAll('table, thead, tbody, tr, td, th')];
-      const contentBottom = contentNodes.reduce((max, el) => {
-        const rect = el.getBoundingClientRect();
-        return Math.max(max, rect.bottom);
-      }, 0);
-
-      const tableVisuallyOverflowingMain = contentBottom > mainRect.bottom + 1;
-      return innerOverflow || mainOverflow || tableVisuallyOverflowingMain;
-    }
-
-    function canFitFinal(container, data, startIndex, className) {
-      const page = createPage(data, startIndex === 0 ? 0 : 1, items.slice(startIndex), startIndex, true);
-      container.innerHTML = '';
-      container.className = `receipt-pages ${className || ''}`.trim();
-      container.appendChild(page);
-      return !isOverflow(page);
-    }
-
-    function buildPages(className = '') {
-      const container = $('receiptPages');
-      const data = getData();
-      container.innerHTML = '';
-      container.className = `receipt-pages ${className}`.trim();
-
-      let start = 0;
-      let pageIndex = 0;
-      const safetyLimit = 80;
-
-      while (start < items.length || pageIndex === 0) {
-        if (canFitFinal(container, data, start, className)) {
-          const finalPage = createPage(data, pageIndex, items.slice(start), start, true);
-          container.innerHTML = '';
-          container.className = `receipt-pages ${className}`.trim();
-
-          for (let i = 0; i < pageIndex; i++) container.appendChild(buildPages.savedPages[i]);
-          container.appendChild(finalPage);
-          break;
-        }
-
-        container.innerHTML = '';
-        container.className = `receipt-pages ${className}`.trim();
-        for (let i = 0; i < pageIndex; i++) container.appendChild(buildPages.savedPages[i]);
-
-        const rows = [];
-        const page = createPage(data, pageIndex, rows, start, false);
-        container.appendChild(page);
-
-        let added = 0;
-        for (let i = start; i < items.length; i++) {
-          rows.push(items[i]);
-          page.querySelector('.page-main').innerHTML = `${pageIndex === 0 ? fullHeaderHtml(data) : miniHeaderHtml(data)}${tableHtml(rows, start)}`;
-          if (isOverflow(page)) {
-            rows.pop();
-            page.querySelector('.page-main').innerHTML = `${pageIndex === 0 ? fullHeaderHtml(data) : miniHeaderHtml(data)}${tableHtml(rows, start)}`;
-            break;
-          }
-          added++;
-        }
-
-        if (added === 0 && start < items.length) {
-          rows.push(items[start]);
-          page.querySelector('.page-main').innerHTML = `${pageIndex === 0 ? fullHeaderHtml(data) : miniHeaderHtml(data)}${tableHtml(rows, start)}`;
-          added = 1;
-        }
-
-        buildPages.savedPages[pageIndex] = page;
-        start += added;
-        pageIndex++;
-
-        if (pageIndex > safetyLimit) break;
-      }
-
-      updatePageNumbers();
-      return container.querySelectorAll('.pdf-page').length;
-    }
-    buildPages.savedPages = [];
-
-    function renderReceiptPages() {
-      if (isRendering) return;
-      isRendering = true;
-      buildPages.savedPages = [];
-
-      const mode = $('fitMode').value;
-      let pages = buildPages(mode === 'compact' ? 'compact' : '');
-
-      if (mode === 'auto' && pages > 1) {
-        buildPages.savedPages = [];
-        pages = buildPages('compact');
-      }
-
-      if (mode === 'auto' && pages > 1) {
-        buildPages.savedPages = [];
-        pages = buildPages('super-compact');
-      }
-
-      updatePageNumbers();
-      updateSummary();
-      isRendering = false;
-    }
-
-    function updatePageNumbers() {
-      const pages = [...document.querySelectorAll('.pdf-page')];
-      const total = pages.length || 1;
-      pages.forEach((page, index) => {
-        const footer = page.querySelector('.footer-note');
-        if (footer) footer.innerHTML = footerHtml(index + 1, total).replace('<div class="footer-note">', '').replace('</div>', '');
-      });
-    }
-
-    function updateSummary() {
-      const data = getData();
-      $('uiSubtotal').textContent = money(data.subtotal);
-      $('uiDiscount').textContent = money(data.discount);
-      $('uiGrandTotal').textContent = money(data.grand);
+    function cleanNumber(value) {
+      const n = Number(value);
+      return Number.isFinite(n) ? n : 0;
     }
 
     function renderItemEditors() {
@@ -1032,12 +868,21 @@
           </div>
           <div>
             <label>Butiran Kerja / Barang</label>
-            <textarea data-field="desc" data-index="${index}">${escapeHtml(item.desc || '')}</textarea>
+            <textarea data-field="desc" data-index="${index}">${item.desc || ''}</textarea>
           </div>
           <div class="grid-3" style="margin-top:10px;">
-            <div><label>Kuantiti</label><input type="number" min="0" step="0.01" data-field="qty" data-index="${index}" value="${item.qty || 0}" /></div>
-            <div><label>Harga Unit (RM)</label><input type="number" min="0" step="0.01" data-field="unit" data-index="${index}" value="${item.unit || 0}" /></div>
-            <div><label>Jumlah</label><input readonly data-line-total="${index}" value="${money(cleanNumber(item.qty) * cleanNumber(item.unit))}" /></div>
+            <div>
+              <label>Kuantiti</label>
+              <input type="number" min="0" step="0.01" data-field="qty" data-index="${index}" value="${item.qty || 0}" />
+            </div>
+            <div>
+              <label>Harga Unit (RM)</label>
+              <input type="number" min="0" step="0.01" data-field="unit" data-index="${index}" value="${item.unit || 0}" />
+            </div>
+            <div>
+              <label>Jumlah</label>
+              <input readonly value="${money(cleanNumber(item.qty) * cleanNumber(item.unit))}" />
+            </div>
           </div>
         `;
         holder.appendChild(box);
@@ -1048,9 +893,8 @@
           const index = Number(e.target.dataset.index);
           const field = e.target.dataset.field;
           items[index][field] = field === 'desc' ? e.target.value : cleanNumber(e.target.value);
-          const totalInput = holder.querySelector(`[data-line-total="${index}"]`);
-          if (totalInput) totalInput.value = money(cleanNumber(items[index].qty) * cleanNumber(items[index].unit));
-          renderReceiptPages();
+          updatePreview();
+          renderItemEditors();
         });
       });
 
@@ -1060,9 +904,74 @@
           items.splice(index, 1);
           if (items.length === 0) items.push({ desc: '', qty: 1, unit: 0 });
           renderItemEditors();
-          renderReceiptPages();
+          updatePreview();
         });
       });
+    }
+
+    function updatePreview() {
+      $('pCompanyName').textContent = $('companyName').value || '-';
+      $('pCompanyReg').textContent = $('companyReg').value ? `No. Pendaftaran: ${$('companyReg').value}` : '';
+      $('pCompanyAddress').innerHTML = textToHtml($('companyAddress').value);
+      $('pCompanyPhone').textContent = $('companyPhone').value ? `Tel: ${$('companyPhone').value}` : '';
+      const bankParts = [];
+      if ($('bankName').value) bankParts.push(`Bank: ${$('bankName').value}`);
+      if ($('bankAccount').value) bankParts.push(`No. Akaun: ${$('bankAccount').value}`);
+      $('pBank').textContent = bankParts.join('  |  ');
+
+      $('pDocTitle').textContent = $('docTitle').value || 'RESIT';
+      $('pDocDate').textContent = formatDate($('docDate').value);
+      $('pDocNo').textContent = $('docNo').value || '';
+      document.querySelectorAll('.optional-docno').forEach(el => el.classList.toggle('hidden', !$('docNo').value.trim()));
+      $('pPaymentStatus').textContent = $('paymentStatus').value || '';
+      document.querySelectorAll('.optional-status').forEach(el => el.classList.toggle('hidden', !$('paymentStatus').value.trim()));
+
+      $('pRecipientName').textContent = $('recipientName').value || '-';
+      $('pRecipientAddress').innerHTML = textToHtml($('recipientAddress').value);
+      $('pSiteAddress').innerHTML = textToHtml($('siteAddress').value);
+      $('pNotes').innerHTML = textToHtml($('notes').value);
+      $('pFooterDate').textContent = `Dicetak pada: ${todayText()}`;
+
+      const tbody = $('pItemsBody');
+      tbody.innerHTML = '';
+      let subtotal = 0;
+      items.forEach((item, index) => {
+        const qty = cleanNumber(item.qty);
+        const unit = cleanNumber(item.unit);
+        const amount = qty * unit;
+        subtotal += amount;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="no">${index + 1}</td>
+          <td class="desc">${textToHtml(item.desc)}</td>
+          <td class="qty">${qty === 1 && item.desc.toLowerCase().includes('lump') ? 'Lump Sum' : qty.toLocaleString('ms-MY')}</td>
+          <td class="unit money">${unit.toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td class="amount money">${amount.toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const discount = cleanNumber($('discount').value);
+      const grand = Math.max(0, subtotal - discount);
+
+      $('uiSubtotal').textContent = money(subtotal);
+      $('uiDiscount').textContent = money(discount);
+      $('uiGrandTotal').textContent = money(grand);
+      $('pSubtotal').textContent = money(subtotal);
+      $('pDiscount').textContent = money(discount);
+      $('pGrandTotal').textContent = money(grand);
+      $('discountRow').classList.toggle('hidden', discount <= 0);
+
+      const stamp = $('pStamp');
+      if ($('showStamp').value === 'yes') {
+        stamp.style.display = '';
+        stamp.src = 'stamp.png';
+      } else {
+        stamp.style.display = 'none';
+      }
+
+      queueResizePreview();
     }
 
     function collectData() {
@@ -1083,8 +992,7 @@
           siteAddress: $('siteAddress').value,
           notes: $('notes').value,
           discount: $('discount').value,
-          showStamp: $('showStamp').value,
-          fitMode: $('fitMode').value
+          showStamp: $('showStamp').value
         },
         items
       };
@@ -1092,10 +1000,12 @@
 
     function applyData(data) {
       if (!data) return;
-      Object.entries(data.fields || {}).forEach(([id, value]) => { if ($(id)) $(id).value = value; });
+      Object.entries(data.fields || {}).forEach(([id, value]) => {
+        if ($(id)) $(id).value = value;
+      });
       if (Array.isArray(data.items) && data.items.length) items = data.items;
       renderItemEditors();
-      renderReceiptPages();
+      updatePreview();
     }
 
     function saveData() {
@@ -1130,68 +1040,77 @@
       $('notes').value = 'Barang yang dijual / kerja yang telah dibuat tidak boleh dikembalikan kecuali dinyatakan sebaliknya.';
       $('discount').value = '0';
       $('showStamp').value = 'yes';
-      $('fitMode').value = 'auto';
       renderItemEditors();
-      renderReceiptPages();
+      updatePreview();
     }
 
     async function generatePdf() {
-      renderReceiptPages();
+      updatePreview();
       saveData();
-      const element = $('receiptPages');
+      const element = $('receiptPaper');
+      const previewWrap = element.parentElement;
+      const savedPaperScale = element.style.getPropertyValue('--paper-scale');
+      const savedWrapHeight = previewWrap.style.height;
+      element.style.setProperty('--paper-scale', '1');
+      previewWrap.style.height = '';
+
       const fileNameSafeRecipient = ($('recipientName').value || 'Penerima').replace(/[^a-z0-9]+/gi, '_').replace(/^_+|_+$/g, '');
       const fileName = `${$('docTitle').value || 'Resit'}_${fileNameSafeRecipient}_${$('docDate').value || 'tarikh'}.pdf`;
 
       if (window.html2pdf) {
         $('statusText').textContent = 'Sedang menjana PDF...';
-        document.body.classList.add('generating-pdf');
-        renderReceiptPages();
-
         const opt = {
           margin: 0,
           filename: fileName,
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
+          html2canvas: { scale: 2, useCORS: true, letterRendering: true },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-          pagebreak: { mode: ['css'], after: '.pdf-page' }
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
         try {
           await html2pdf().set(opt).from(element).save();
-          document.body.classList.remove('generating-pdf');
-          renderReceiptPages();
           $('statusText').textContent = 'PDF siap dijana.';
           setTimeout(() => $('statusText').textContent = '', 2500);
         } catch (err) {
-          document.body.classList.remove('generating-pdf');
-          renderReceiptPages();
           console.error(err);
           $('statusText').textContent = 'Gagal jana PDF automatik. Browser akan buka print dialog.';
           setTimeout(() => window.print(), 350);
+        } finally {
+          if (savedPaperScale) element.style.setProperty('--paper-scale', savedPaperScale);
+          else element.style.removeProperty('--paper-scale');
+          previewWrap.style.height = savedWrapHeight;
+          queueResizePreview();
         }
       } else {
+        if (savedPaperScale) element.style.setProperty('--paper-scale', savedPaperScale);
+        else element.style.removeProperty('--paper-scale');
+        previewWrap.style.height = savedWrapHeight;
+        queueResizePreview();
         $('statusText').textContent = 'Library PDF tidak dimuatkan. Guna pilihan Save as PDF dalam print dialog.';
         setTimeout(() => window.print(), 350);
       }
     }
 
     document.querySelectorAll('input, textarea, select').forEach((el) => {
-      el.addEventListener('input', () => renderReceiptPages());
-      el.addEventListener('change', () => renderReceiptPages());
+      el.addEventListener('input', updatePreview);
+      el.addEventListener('change', updatePreview);
     });
 
     $('addItemBtn').addEventListener('click', () => {
       items.push({ desc: '', qty: 1, unit: 0 });
       renderItemEditors();
-      renderReceiptPages();
+      updatePreview();
     });
 
     $('saveBtn').addEventListener('click', saveData);
     $('resetBtn').addEventListener('click', resetData);
     $('pdfBtn').addEventListener('click', generatePdf);
+    window.addEventListener('resize', queueResizePreview);
+    window.addEventListener('orientationchange', () => setTimeout(resizePreviewForScreen, 250));
 
     renderItemEditors();
     loadData();
-    renderReceiptPages();
+    updatePreview();
   </script>
 </body>
 </html>
