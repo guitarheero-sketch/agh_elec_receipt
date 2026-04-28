@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generator Resit / Invois Kerja</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-YcsIPGdhPK4P/uRW6/s3IPfQdI4OpkwGf46rMXOOXAOqOqBCoHkU1Oa3CQxq1Y3B7mLkxs9Jp7L/o4p+gt9d7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    :root {
+      --bg: #eef2f7;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d7dde8;
+      --brand: #0f5fbd;
+      --brand-dark: #0b4b94;
+      --danger: #c03434;
+      --ok: #127c56;
+      --shadow: 0 18px 45px rgba(16, 24, 40, 0.12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top left, #f9fbff 0, var(--bg) 38%, #e8edf5 100%);
+      color: var(--ink);
+    }
+
+    .app {
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 6px;
+      font-size: clamp(22px, 3vw, 34px);
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      font-size: 14px;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+      box-shadow: 0 10px 22px rgba(15, 95, 189, 0.25);
+    }
+
+    .btn-secondary {
+      color: var(--ink);
+      background: #e9eef7;
+    }
+
+    .btn-danger {
+      color: white;
+      background: var(--danger);
+      padding: 8px 11px;
+      font-size: 12px;
+    }
+
+    .btn-small {
+      padding: 8px 11px;
+      font-size: 12px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(330px, 500px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    .form-panel {
+      position: sticky;
+      top: 14px;
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+    }
+
+    .section {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      background: #fbfcff;
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr 0.8fr;
+      gap: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 11px;
+      font: inherit;
+      font-size: 14px;
+      background: white;
+      color: var(--ink);
+      outline: none;
+    }
+
+    textarea { resize: vertical; min-height: 72px; }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(15, 95, 189, 0.11);
+    }
+
+    .item-editor {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: white;
+    }
+
+    .item-editor-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .summary-box {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px 12px;
+      background: #f4f7fb;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 14px;
+    }
+
+    .summary-box strong { font-size: 18px; }
+
+    .status {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      min-height: 18px;
+    }
+
+    .preview-wrap {
+      overflow: auto;
+      padding: 18px;
+      background: #cfd7e4;
+      border-radius: var(--radius);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.35);
+    }
+
+    .paper {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: white;
+      color: #111827;
+      padding: 14mm;
+      box-shadow: 0 18px 45px rgba(0,0,0,.22);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.25;
+      position: relative;
+    }
+
+    .doc-head {
+      display: grid;
+      grid-template-columns: 1.45fr 0.85fr;
+      gap: 12mm;
+      align-items: start;
+      border-bottom: 2px solid #111827;
+      padding-bottom: 8mm;
+      margin-bottom: 7mm;
+    }
+
+    .company-name {
+      font-size: 19pt;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 2mm;
+      text-transform: uppercase;
+    }
+
+    .company-meta {
+      font-size: 9.6pt;
+      color: #293241;
+      line-height: 1.38;
+    }
+
+    .doc-title-box {
+      text-align: right;
+    }
+
+    .doc-title {
+      display: inline-block;
+      font-size: 22pt;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      padding: 3mm 0 2mm;
+      text-transform: uppercase;
+    }
+
+    .doc-meta {
+      margin-top: 3mm;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2mm 4mm;
+      font-size: 9.6pt;
+      text-align: left;
+      justify-content: end;
+    }
+
+    .doc-meta .label,
+    .bill-grid .label,
+    .total-table .label {
+      color: #4b5563;
+      font-weight: 700;
+    }
+
+    .bill-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8mm;
+      margin-bottom: 8mm;
+    }
+
+    .bill-card {
+      border: 1px solid #cfd6df;
+      padding: 4.2mm;
+      min-height: 29mm;
+    }
+
+    .bill-card h3 {
+      margin: 0 0 3mm;
+      font-size: 9.5pt;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #4b5563;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 2mm;
+    }
+
+    .bill-main {
+      font-weight: 800;
+      font-size: 11pt;
+      margin-bottom: 1.5mm;
+      text-transform: uppercase;
+    }
+
+    .bill-lines {
+      white-space: pre-line;
+      color: #293241;
+    }
+
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin-bottom: 7mm;
+    }
+
+    .items-table th,
+    .items-table td {
+      border: 1px solid #9ca3af;
+      padding: 2.4mm 2.2mm;
+      vertical-align: top;
+      word-wrap: break-word;
+    }
+
+    .items-table th {
+      background: #f1f5f9;
+      text-align: center;
+      font-size: 8.6pt;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+
+    .items-table .no { width: 10mm; text-align: center; }
+    .items-table .desc { width: auto; }
+    .items-table .qty { width: 20mm; text-align: center; }
+    .items-table .unit { width: 25mm; text-align: right; }
+    .items-table .amount { width: 28mm; text-align: right; }
+
+    .money { text-align: right; white-space: nowrap; }
+
+    .bottom-area {
+      display: grid;
+      grid-template-columns: 1fr 63mm;
+      gap: 8mm;
+      align-items: start;
+    }
+
+    .notes-box {
+      border: 1px solid #cfd6df;
+      min-height: 26mm;
+      padding: 4mm;
+      font-size: 9.2pt;
+    }
+
+    .notes-box h3 {
+      margin: 0 0 2.5mm;
+      font-size: 9pt;
+      text-transform: uppercase;
+      color: #4b5563;
+      letter-spacing: .05em;
+    }
+
+    .total-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+    }
+
+    .total-table td {
+      border: 1px solid #9ca3af;
+      padding: 2.6mm;
+    }
+
+    .total-table .grand td {
+      font-size: 13pt;
+      font-weight: 900;
+      background: #f8fafc;
+    }
+
+    .sign-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12mm;
+      margin-top: 12mm;
+      align-items: end;
+    }
+
+    .sign-box {
+      min-height: 36mm;
+      position: relative;
+    }
+
+    .stamp-img {
+      max-width: 82mm;
+      max-height: 31mm;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 2mm;
+    }
+
+    .sign-line {
+      border-top: 1px solid #111827;
+      padding-top: 2mm;
+      text-align: center;
+      font-size: 9pt;
+      color: #374151;
+    }
+
+    .footer-note {
+      position: absolute;
+      left: 14mm;
+      right: 14mm;
+      bottom: 9mm;
+      font-size: 8pt;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 2mm;
+    }
+
+    .hidden { display: none !important; }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    @media print {
+      body { background: white; }
+      .app { padding: 0; width: 100%; }
+      .hero, .form-panel { display: none !important; }
+      .layout { display: block; }
+      .panel { box-shadow: none; border: 0; padding: 0; }
+      .preview-wrap { padding: 0; background: white; border-radius: 0; overflow: visible; }
+      .paper { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; }
+    }
+
+    @media (max-width: 1050px) {
+      .layout { grid-template-columns: 1fr; }
+      .form-panel { position: static; max-height: none; }
+      .preview-wrap { padding: 12px; }
+    }
+
+    @media (max-width: 720px) {
+      .app { padding: 10px; }
+      .hero { align-items: stretch; flex-direction: column; }
+      .hero-actions { justify-content: stretch; }
+      .hero-actions button { flex: 1; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .section { padding: 12px; }
+      .paper {
+        transform-origin: top left;
+        width: 210mm;
+        min-height: 297mm;
+      }
+      .preview-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .item-editor .grid-3 { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div>
+        <h1>Generator Resit / Invois Kerja</h1>
+        <p>Isi maklumat kerja, sistem kira jumlah automatik, kemudian jana PDF. Simpan fail ini sebagai <b>index.html</b> dan letakkan <b>stamp.png</b> dalam folder yang sama.</p>
+      </div>
+      <div class="hero-actions">
+        <button class="btn-secondary" type="button" id="saveBtn">Simpan Data</button>
+        <button class="btn-secondary" type="button" id="resetBtn">Reset</button>
+        <button class="btn-primary" type="button" id="pdfBtn">Generate PDF</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="panel form-panel">
+        <div class="section">
+          <h2>Maklumat Syarikat</h2>
+          <div class="grid-2">
+            <div>
+              <label>Nama Syarikat</label>
+              <input id="companyName" value="AGH ELEC TRADING" />
+            </div>
+            <div>
+              <label>No. Pendaftaran</label>
+              <input id="companyReg" value="LA0052469-K" />
+            </div>
+          </div>
+          <div style="margin-top:10px;">
+            <label>Alamat Syarikat</label>
+            <textarea id="companyAddress">NO A21, TINGKAT 1, JALAN BAHAGIA 10,
+28000 TEMERLOH, PAHANG</textarea>
+          </div>
+          <div class="grid-2" style="margin-top:10px;">
+            <div>
+              <label>No. Telefon</label>
+              <input id="companyPhone" value="0133157598" />
+            </div>
+            <div>
+              <label>Bank</label>
+              <input id="bankName" value="BANK MUAMALAT" />
+            </div>
+          </div>
+          <div style="margin-top:10px;">
+            <label>No. Akaun Bank</label>
+            <input id="bankAccount" value="06040001443713" />
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Maklumat Resit</h2>
+          <div class="grid-2">
+            <div>
+              <label>Tajuk Dokumen</label>
+              <select id="docTitle">
+                <option value="RESIT">RESIT</option>
+                <option value="INVOIS">INVOIS</option>
+                <option value="RESIT / INVOIS">RESIT / INVOIS</option>
+              </select>
+            </div>
+            <div>
+              <label>Tarikh</label>
+              <input id="docDate" type="date" value="2026-04-24" />
+            </div>
+          </div>
+          <div class="grid-2" style="margin-top:10px;">
+            <div>
+              <label>No. Resit / Rujukan <span style="font-weight:400;">(boleh kosong)</span></label>
+              <input id="docNo" placeholder="Contoh: R-001" />
+            </div>
+            <div>
+              <label>Status Bayaran <span style="font-weight:400;">(boleh kosong)</span></label>
+              <input id="paymentStatus" placeholder="" />
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Penerima & Tapak Kerja</h2>
+          <div>
+            <label>Diterima Daripada / Kepada</label>
+            <input id="recipientName" value="PERNIAGAAN PAKSI DANA" />
+          </div>
+          <div style="margin-top:10px;">
+            <label>Alamat / Maklumat Penerima <span style="font-weight:400;">(boleh kosong)</span></label>
+            <textarea id="recipientAddress" placeholder="Alamat penerima jika perlu"></textarea>
+          </div>
+          <div style="margin-top:10px;">
+            <label>Tapak Kerja</label>
+            <textarea id="siteAddress">TAMAN LANCHANG PERMAI</textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Butiran Kerja</h2>
+          <div id="itemsEditor"></div>
+          <button class="btn-secondary" type="button" id="addItemBtn">+ Tambah Butiran</button>
+        </div>
+
+        <div class="section">
+          <h2>Nota & Paparan</h2>
+          <div>
+            <label>Nota</label>
+            <textarea id="notes">Barang yang dijual / kerja yang telah dibuat tidak boleh dikembalikan kecuali dinyatakan sebaliknya.</textarea>
+          </div>
+          <div class="grid-2" style="margin-top:10px;">
+            <div>
+              <label>Diskaun (RM)</label>
+              <input id="discount" type="number" min="0" step="0.01" value="0" />
+            </div>
+            <div>
+              <label>Tunjuk Cop Syarikat</label>
+              <select id="showStamp">
+                <option value="yes">Ya</option>
+                <option value="no">Tidak</option>
+              </select>
+            </div>
+          </div>
+          <div class="summary-box" style="margin-top:12px;">
+            <span>Subtotal</span><span id="uiSubtotal">RM0.00</span>
+            <span>Diskaun</span><span id="uiDiscount">RM0.00</span>
+            <strong>Jumlah Akhir</strong><strong id="uiGrandTotal">RM0.00</strong>
+          </div>
+          <div class="status" id="statusText"></div>
+        </div>
+      </aside>
+
+      <section class="panel">
+        <div class="preview-wrap">
+          <article class="paper" id="receiptPaper">
+            <div class="doc-head">
+              <div>
+                <div class="company-name" id="pCompanyName">AGH ELEC TRADING</div>
+                <div class="company-meta">
+                  <div id="pCompanyReg">No. Pendaftaran: LA0052469-K</div>
+                  <div id="pCompanyAddress">NO A21, TINGKAT 1, JALAN BAHAGIA 10,<br>28000 TEMERLOH, PAHANG</div>
+                  <div id="pCompanyPhone">Tel: 0133157598</div>
+                  <div id="pBank">Bank: BANK MUAMALAT &nbsp; | &nbsp; No. Akaun: 06040001443713</div>
+                </div>
+              </div>
+              <div class="doc-title-box">
+                <div class="doc-title" id="pDocTitle">RESIT</div>
+                <div class="doc-meta">
+                  <div class="label">Tarikh</div><div id="pDocDate">24/04/2026</div>
+                  <div class="label optional-docno">No. Rujukan</div><div id="pDocNo" class="optional-docno"></div>
+                  <div class="label optional-status">Status Bayaran</div><div id="pPaymentStatus" class="optional-status"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bill-grid">
+              <div class="bill-card">
+                <h3>Penerima</h3>
+                <div class="bill-main" id="pRecipientName">PERNIAGAAN PAKSI DANA</div>
+                <div class="bill-lines" id="pRecipientAddress"></div>
+              </div>
+              <div class="bill-card">
+                <h3>Tapak Kerja</h3>
+                <div class="bill-lines" id="pSiteAddress">TAMAN LANCHANG PERMAI</div>
+              </div>
+            </div>
+
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th class="no">Bil.</th>
+                  <th class="desc">Butiran Kerja / Barang</th>
+                  <th class="qty">Kuantiti</th>
+                  <th class="unit">Harga Unit (RM)</th>
+                  <th class="amount">Jumlah (RM)</th>
+                </tr>
+              </thead>
+              <tbody id="pItemsBody"></tbody>
+            </table>
+
+            <div class="bottom-area">
+              <div class="notes-box">
+                <h3>Nota</h3>
+                <div id="pNotes"></div>
+              </div>
+              <table class="total-table">
+                <tbody>
+                  <tr>
+                    <td class="label">Subtotal</td>
+                    <td class="money" id="pSubtotal">RM0.00</td>
+                  </tr>
+                  <tr id="discountRow">
+                    <td class="label">Diskaun</td>
+                    <td class="money" id="pDiscount">RM0.00</td>
+                  </tr>
+                  <tr class="grand">
+                    <td>JUMLAH</td>
+                    <td class="money" id="pGrandTotal">RM0.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="sign-area">
+              <div class="sign-box">
+                <div class="sign-line">Diterima Oleh</div>
+              </div>
+              <div class="sign-box">
+                <img src="stamp.png" alt="Cop Syarikat" class="stamp-img" id="pStamp" onerror="this.style.display='none'" />
+                <div class="sign-line">Tandatangan & Cop Syarikat</div>
+              </div>
+            </div>
+
+            <div class="footer-note">
+              <span>Dokumen ini dijana secara digital.</span>
+              <span id="pFooterDate">Dicetak pada: -</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const DEFAULT_ITEMS = [
+      { desc: 'Membekal dan memasang lampu T8 LED 2 kaki', qty: 2, unit: 30 },
+      { desc: 'Membekal dan memasang lampu T8 LED 4 kaki', qty: 8, unit: 35 },
+      { desc: 'Membekal dan memasang kipas siling Panasonic', qty: 3, unit: 200 },
+      { desc: 'Membekal dan memasang soket alir keluar 13A', qty: 9, unit: 20 },
+      { desc: 'Membekal dan memasang suis 3 gang', qty: 1, unit: 30 },
+      { desc: 'Membekal dan memasang suis 2 gang', qty: 5, unit: 25 },
+      { desc: 'Membekal dan memasang suis 1 gang', qty: 1, unit: 20 },
+      { desc: 'Membekal dan menambah pendawaian', qty: 1, unit: 350 },
+      { desc: 'Membekal dan memasang kotak agihan serta alat', qty: 1, unit: 500 }
+    ];
+
+    let items = [...DEFAULT_ITEMS];
+
+    const $ = (id) => document.getElementById(id);
+    const money = (num) => 'RM' + Number(num || 0).toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const textToHtml = (value) => String(value || '').trim().replace(/\n/g, '<br>');
+
+    function formatDate(dateValue) {
+      if (!dateValue) return '';
+      const [y, m, d] = dateValue.split('-');
+      if (!y || !m || !d) return dateValue;
+      return `${d}/${m}/${y}`;
+    }
+
+    function todayText() {
+      const now = new Date();
+      return now.toLocaleDateString('ms-MY', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+
+    function cleanNumber(value) {
+      const n = Number(value);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function renderItemEditors() {
+      const holder = $('itemsEditor');
+      holder.innerHTML = '';
+      items.forEach((item, index) => {
+        const box = document.createElement('div');
+        box.className = 'item-editor';
+        box.innerHTML = `
+          <div class="item-editor-head">
+            <span>Butiran #${index + 1}</span>
+            <button type="button" class="btn-danger btn-small" data-remove="${index}">Buang</button>
+          </div>
+          <div>
+            <label>Butiran Kerja / Barang</label>
+            <textarea data-field="desc" data-index="${index}">${item.desc || ''}</textarea>
+          </div>
+          <div class="grid-3" style="margin-top:10px;">
+            <div>
+              <label>Kuantiti</label>
+              <input type="number" min="0" step="0.01" data-field="qty" data-index="${index}" value="${item.qty || 0}" />
+            </div>
+            <div>
+              <label>Harga Unit (RM)</label>
+              <input type="number" min="0" step="0.01" data-field="unit" data-index="${index}" value="${item.unit || 0}" />
+            </div>
+            <div>
+              <label>Jumlah</label>
+              <input readonly value="${money(cleanNumber(item.qty) * cleanNumber(item.unit))}" />
+            </div>
+          </div>
+        `;
+        holder.appendChild(box);
+      });
+
+      holder.querySelectorAll('[data-field]').forEach((el) => {
+        el.addEventListener('input', (e) => {
+          const index = Number(e.target.dataset.index);
+          const field = e.target.dataset.field;
+          items[index][field] = field === 'desc' ? e.target.value : cleanNumber(e.target.value);
+          updatePreview();
+          renderItemEditors();
+        });
+      });
+
+      holder.querySelectorAll('[data-remove]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const index = Number(e.target.dataset.remove);
+          items.splice(index, 1);
+          if (items.length === 0) items.push({ desc: '', qty: 1, unit: 0 });
+          renderItemEditors();
+          updatePreview();
+        });
+      });
+    }
+
+    function updatePreview() {
+      $('pCompanyName').textContent = $('companyName').value || '-';
+      $('pCompanyReg').textContent = $('companyReg').value ? `No. Pendaftaran: ${$('companyReg').value}` : '';
+      $('pCompanyAddress').innerHTML = textToHtml($('companyAddress').value);
+      $('pCompanyPhone').textContent = $('companyPhone').value ? `Tel: ${$('companyPhone').value}` : '';
+      const bankParts = [];
+      if ($('bankName').value) bankParts.push(`Bank: ${$('bankName').value}`);
+      if ($('bankAccount').value) bankParts.push(`No. Akaun: ${$('bankAccount').value}`);
+      $('pBank').textContent = bankParts.join('  |  ');
+
+      $('pDocTitle').textContent = $('docTitle').value || 'RESIT';
+      $('pDocDate').textContent = formatDate($('docDate').value);
+      $('pDocNo').textContent = $('docNo').value || '';
+      document.querySelectorAll('.optional-docno').forEach(el => el.classList.toggle('hidden', !$('docNo').value.trim()));
+      $('pPaymentStatus').textContent = $('paymentStatus').value || '';
+      document.querySelectorAll('.optional-status').forEach(el => el.classList.toggle('hidden', !$('paymentStatus').value.trim()));
+
+      $('pRecipientName').textContent = $('recipientName').value || '-';
+      $('pRecipientAddress').innerHTML = textToHtml($('recipientAddress').value);
+      $('pSiteAddress').innerHTML = textToHtml($('siteAddress').value);
+      $('pNotes').innerHTML = textToHtml($('notes').value);
+      $('pFooterDate').textContent = `Dicetak pada: ${todayText()}`;
+
+      const tbody = $('pItemsBody');
+      tbody.innerHTML = '';
+      let subtotal = 0;
+      items.forEach((item, index) => {
+        const qty = cleanNumber(item.qty);
+        const unit = cleanNumber(item.unit);
+        const amount = qty * unit;
+        subtotal += amount;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="no">${index + 1}</td>
+          <td class="desc">${textToHtml(item.desc)}</td>
+          <td class="qty">${qty === 1 && item.desc.toLowerCase().includes('lump') ? 'Lump Sum' : qty.toLocaleString('ms-MY')}</td>
+          <td class="unit money">${unit.toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td class="amount money">${amount.toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const discount = cleanNumber($('discount').value);
+      const grand = Math.max(0, subtotal - discount);
+
+      $('uiSubtotal').textContent = money(subtotal);
+      $('uiDiscount').textContent = money(discount);
+      $('uiGrandTotal').textContent = money(grand);
+      $('pSubtotal').textContent = money(subtotal);
+      $('pDiscount').textContent = money(discount);
+      $('pGrandTotal').textContent = money(grand);
+      $('discountRow').classList.toggle('hidden', discount <= 0);
+
+      const stamp = $('pStamp');
+      if ($('showStamp').value === 'yes') {
+        stamp.style.display = '';
+        stamp.src = 'stamp.png';
+      } else {
+        stamp.style.display = 'none';
+      }
+    }
+
+    function collectData() {
+      return {
+        fields: {
+          companyName: $('companyName').value,
+          companyReg: $('companyReg').value,
+          companyAddress: $('companyAddress').value,
+          companyPhone: $('companyPhone').value,
+          bankName: $('bankName').value,
+          bankAccount: $('bankAccount').value,
+          docTitle: $('docTitle').value,
+          docDate: $('docDate').value,
+          docNo: $('docNo').value,
+          paymentStatus: $('paymentStatus').value,
+          recipientName: $('recipientName').value,
+          recipientAddress: $('recipientAddress').value,
+          siteAddress: $('siteAddress').value,
+          notes: $('notes').value,
+          discount: $('discount').value,
+          showStamp: $('showStamp').value
+        },
+        items
+      };
+    }
+
+    function applyData(data) {
+      if (!data) return;
+      Object.entries(data.fields || {}).forEach(([id, value]) => {
+        if ($(id)) $(id).value = value;
+      });
+      if (Array.isArray(data.items) && data.items.length) items = data.items;
+      renderItemEditors();
+      updatePreview();
+    }
+
+    function saveData() {
+      localStorage.setItem('resitGeneratorData', JSON.stringify(collectData()));
+      $('statusText').textContent = 'Data sudah disimpan dalam browser ini.';
+      setTimeout(() => $('statusText').textContent = '', 2500);
+    }
+
+    function loadData() {
+      const raw = localStorage.getItem('resitGeneratorData');
+      if (!raw) return;
+      try { applyData(JSON.parse(raw)); } catch (e) { console.warn(e); }
+    }
+
+    function resetData() {
+      if (!confirm('Reset semua data kepada contoh asal?')) return;
+      localStorage.removeItem('resitGeneratorData');
+      items = [...DEFAULT_ITEMS];
+      $('companyName').value = 'AGH ELEC TRADING';
+      $('companyReg').value = 'LA0052469-K';
+      $('companyAddress').value = 'NO A21, TINGKAT 1, JALAN BAHAGIA 10,\n28000 TEMERLOH, PAHANG';
+      $('companyPhone').value = '0133157598';
+      $('bankName').value = 'BANK MUAMALAT';
+      $('bankAccount').value = '06040001443713';
+      $('docTitle').value = 'RESIT';
+      $('docDate').value = '2026-04-24';
+      $('docNo').value = '';
+      $('paymentStatus').value = '';
+      $('recipientName').value = 'PERNIAGAAN PAKSI DANA';
+      $('recipientAddress').value = '';
+      $('siteAddress').value = 'TAMAN LANCHANG PERMAI';
+      $('notes').value = 'Barang yang dijual / kerja yang telah dibuat tidak boleh dikembalikan kecuali dinyatakan sebaliknya.';
+      $('discount').value = '0';
+      $('showStamp').value = 'yes';
+      renderItemEditors();
+      updatePreview();
+    }
+
+    async function generatePdf() {
+      updatePreview();
+      saveData();
+      const element = $('receiptPaper');
+      const fileNameSafeRecipient = ($('recipientName').value || 'Penerima').replace(/[^a-z0-9]+/gi, '_').replace(/^_+|_+$/g, '');
+      const fileName = `${$('docTitle').value || 'Resit'}_${fileNameSafeRecipient}_${$('docDate').value || 'tarikh'}.pdf`;
+
+      if (window.html2pdf) {
+        $('statusText').textContent = 'Sedang menjana PDF...';
+        const opt = {
+          margin: 0,
+          filename: fileName,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        };
+        try {
+          await html2pdf().set(opt).from(element).save();
+          $('statusText').textContent = 'PDF siap dijana.';
+          setTimeout(() => $('statusText').textContent = '', 2500);
+        } catch (err) {
+          console.error(err);
+          $('statusText').textContent = 'Gagal jana PDF automatik. Browser akan buka print dialog.';
+          setTimeout(() => window.print(), 350);
+        }
+      } else {
+        $('statusText').textContent = 'Library PDF tidak dimuatkan. Guna pilihan Save as PDF dalam print dialog.';
+        setTimeout(() => window.print(), 350);
+      }
+    }
+
+    document.querySelectorAll('input, textarea, select').forEach((el) => {
+      el.addEventListener('input', updatePreview);
+      el.addEventListener('change', updatePreview);
+    });
+
+    $('addItemBtn').addEventListener('click', () => {
+      items.push({ desc: '', qty: 1, unit: 0 });
+      renderItemEditors();
+      updatePreview();
+    });
+
+    $('saveBtn').addEventListener('click', saveData);
+    $('resetBtn').addEventListener('click', resetData);
+    $('pdfBtn').addEventListener('click', generatePdf);
+
+    renderItemEditors();
+    loadData();
+    updatePreview();
+  </script>
+</body>
+</html>
