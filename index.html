@@ -260,7 +260,9 @@
     }
 
     .page-main {
+      flex: 1 1 auto;
       min-height: 0;
+      overflow: hidden;
     }
 
     .doc-head {
@@ -406,8 +408,9 @@
     .money { text-align: right; white-space: nowrap; }
 
     .final-block {
-      margin-top: auto;
-      padding-top: 6mm;
+      flex: 0 0 auto;
+      margin-top: 5mm;
+      padding-top: 0;
       break-inside: avoid;
       page-break-inside: avoid;
     }
@@ -488,8 +491,9 @@
     }
 
     .continued-note {
-      margin-top: auto;
-      padding-top: 4mm;
+      flex: 0 0 auto;
+      margin-top: 4mm;
+      padding-top: 0;
       font-size: 8.6pt;
       color: #6b7280;
       text-align: right;
@@ -525,7 +529,7 @@
     .receipt-pages.compact .items-table th { font-size: 7.2pt; }
     .receipt-pages.compact .items-table th,
     .receipt-pages.compact .items-table td { padding: 1.35mm 1.5mm; }
-    .receipt-pages.compact .final-block { padding-top: 4mm; }
+    .receipt-pages.compact .final-block { margin-top: 3.5mm; padding-top: 0; }
     .receipt-pages.compact .notes-box { min-height: 18mm; padding: 2.7mm; font-size: 8pt; }
     .receipt-pages.compact .total-table { font-size: 8.5pt; }
     .receipt-pages.compact .total-table td { padding: 1.8mm; }
@@ -557,6 +561,10 @@
     .hidden { display: none !important; }
 
     @page { size: A4; margin: 0; }
+
+    body.generating-pdf .preview-wrap { padding: 0; background: white; }
+    body.generating-pdf .pdf-page { margin: 0; box-shadow: none; }
+    body.generating-pdf .panel { box-shadow: none; }
 
     @media print {
       body { background: white; }
@@ -888,7 +896,21 @@
 
     function isOverflow(page) {
       const inner = page.querySelector('.page-inner');
-      return inner.scrollHeight > inner.clientHeight + 2;
+      const main = page.querySelector('.page-main');
+      if (!inner || !main) return false;
+
+      const innerOverflow = inner.scrollHeight > inner.clientHeight + 2;
+      const mainOverflow = main.scrollHeight > main.clientHeight + 2;
+
+      const mainRect = main.getBoundingClientRect();
+      const contentNodes = [...main.querySelectorAll('table, thead, tbody, tr, td, th')];
+      const contentBottom = contentNodes.reduce((max, el) => {
+        const rect = el.getBoundingClientRect();
+        return Math.max(max, rect.bottom);
+      }, 0);
+
+      const tableVisuallyOverflowingMain = contentBottom > mainRect.bottom + 1;
+      return innerOverflow || mainOverflow || tableVisuallyOverflowingMain;
     }
 
     function canFitFinal(container, data, startIndex, className) {
@@ -1122,6 +1144,9 @@
 
       if (window.html2pdf) {
         $('statusText').textContent = 'Sedang menjana PDF...';
+        document.body.classList.add('generating-pdf');
+        renderReceiptPages();
+
         const opt = {
           margin: 0,
           filename: fileName,
@@ -1132,9 +1157,13 @@
         };
         try {
           await html2pdf().set(opt).from(element).save();
+          document.body.classList.remove('generating-pdf');
+          renderReceiptPages();
           $('statusText').textContent = 'PDF siap dijana.';
           setTimeout(() => $('statusText').textContent = '', 2500);
         } catch (err) {
+          document.body.classList.remove('generating-pdf');
+          renderReceiptPages();
           console.error(err);
           $('statusText').textContent = 'Gagal jana PDF automatik. Browser akan buka print dialog.';
           setTimeout(() => window.print(), 350);
